@@ -8,21 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class DiaryList extends Fragment {
 
-    public DiaryList() {
+public class AddDiaryItemFragment extends Fragment {
+
+    public AddDiaryItemFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_diary_list, container, false);
+        return inflater.inflate(R.layout.fragment_add_diary_item, container, false);
     }
 }
