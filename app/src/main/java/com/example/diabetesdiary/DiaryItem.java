@@ -1,18 +1,37 @@
 package com.example.diabetesdiary;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class DiaryItem {
+public class DiaryItem implements Serializable {
+
+    private int id;
     private Calendar date;
     private float insulinRapidCount;
     private float carbUnits;
     private float glucoseLevel;
+    private String note;
 
-    public DiaryItem(Calendar date, float insulinRapidCount, float carbUnits, float glucoseLevel) {
+
+    public DiaryItem(int id, Calendar date, float insulinRapidCount, float carbUnits, float glucoseLevel, String note) {
+        this.id = id;
         this.date = date;
         this.insulinRapidCount = insulinRapidCount;
         this.carbUnits = carbUnits;
         this.glucoseLevel = glucoseLevel;
+        this.note = note;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Calendar getDate() {
