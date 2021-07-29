@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
+import java.util.Locale;
+
 
 /* TODO
     1. Сделать выпадающий Time-picker и Date-picker в добавлении
@@ -19,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Locale.setDefault(new Locale("ru"));
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         DiaryListFragment listFragment = new DiaryListFragment();
