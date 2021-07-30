@@ -6,36 +6,52 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
 
 public class AddDiaryItemFragment extends Fragment {
 
-    EditText date,time;
+    public enum ACTION_TYPE {
+        ACTION_ADD, ACTION_EDIT
+    }
+
+    TextView tvCarbUnits,tvSugar, tvInsulin;
+    EditText etDate, etTime, etNote;
+    Button btnCancel, btnAction;
+    SeekBar sbSugarIntPart,sbSugarFloatPart, sbCarbIntPart, sbCarbFloatPart,sbInsulinIntPart,sbInsulinFloatPart;
     Calendar calendar;
+    DiaryItem item;
+    ACTION_TYPE action;
 
 
-    public AddDiaryItemFragment() {
+    public AddDiaryItemFragment(ACTION_TYPE action, DiaryItem item) {
+        this.action = action;
+        if (item == null)
+            this.item = new DiaryItem();
+        else {
+            this.item = item;
+        }
+        calendar = this.item.getDate();
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -44,26 +60,175 @@ public class AddDiaryItemFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_diary_item, container, false);
 
-        calendar = GregorianCalendar.getInstance();
-        date =  (EditText)v.findViewById(R.id.etDate);
-        time = (EditText)v.findViewById(R.id.etTime);
 
-        date.setFocusable(false);
-        date.setClickable(true);
-        date.setInputType(InputType.TYPE_NULL);
+        etDate =  (EditText)v.findViewById(R.id.etDate);
+        etTime = (EditText)v.findViewById(R.id.etTime);
+        etNote = (EditText)v.findViewById(R.id.etNote);
+        sbCarbFloatPart = (SeekBar)v.findViewById(R.id.sbCarbFloatPart);
+        sbCarbIntPart = (SeekBar)v.findViewById(R.id.sbCarbIntPart);
+        sbInsulinFloatPart = (SeekBar)v.findViewById(R.id.sbInsulinFloatPart);
+        sbInsulinIntPart = (SeekBar)v.findViewById(R.id.sbInsulinIntPart);
+        sbSugarFloatPart = (SeekBar)v.findViewById(R.id.sbSugarFloatPart);
+        sbSugarIntPart = (SeekBar)v.findViewById(R.id.sbSugarIntPart);
 
-        time.setFocusable(false);
-        time.setClickable(true);
-        time.setInputType(InputType.TYPE_NULL);
+        tvCarbUnits =(TextView)v.findViewById(R.id.tvCarbUnits);
+        tvSugar = (TextView)v.findViewById(R.id.tvSugar);
+        tvInsulin = (TextView)v.findViewById(R.id.tvInsulin);
 
-        DateTimeHelper.updateDateViewLabel(date,calendar);
-        DateTimeHelper.updateTimeViewLabel(time,calendar);
+        sbCarbFloatPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateCarbUnits();
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        sbCarbIntPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateCarbUnits();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        sbSugarIntPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateSugar();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        sbSugarFloatPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateSugar();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        sbInsulinIntPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateInsulin();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        sbInsulinFloatPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                updateInsulin();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        etNote.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                item.setNote(etNote.getText().toString());
+            }
+        });
+
+        etDate.setFocusable(false);
+        etDate.setClickable(true);
+        etDate.setInputType(InputType.TYPE_NULL);
+
+        etTime.setFocusable(false);
+        etTime.setClickable(true);
+        etTime.setInputType(InputType.TYPE_NULL);
+
+        DateTimeHelper.updateDateViewLabel(etDate,calendar);
+        DateTimeHelper.updateTimeViewLabel(etTime,calendar);
 
         setupDatePickerDialog();
         setupTimePickerDialog();
 
+        btnAction = v.findViewById(R.id.btnAction);
+        btnCancel = v.findViewById(R.id.btnCancel);
+
+
+        btnAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (action == ACTION_TYPE.ACTION_ADD) {
+                    addItemAndClose();
+                }
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishFragment();
+            }
+        });
+
 
         return v;
+    }
+
+    private void addItemAndClose() {
+
     }
 
     private void setupDatePickerDialog() {
@@ -73,12 +238,11 @@ public class AddDiaryItemFragment extends Fragment {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                DateTimeHelper.updateDateViewLabel(date,calendar);
+                DateTimeHelper.updateDateViewLabel(etDate,calendar);
             }
         };
 
-        date.setOnClickListener(new View.OnClickListener() {
+        etDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(
@@ -98,11 +262,11 @@ public class AddDiaryItemFragment extends Fragment {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 calendar.set(Calendar.MINUTE,minute);
-                DateTimeHelper.updateTimeViewLabel(time,calendar);
+                DateTimeHelper.updateTimeViewLabel(etTime,calendar);
             }
         };
 
-        time.setOnClickListener(new View.OnClickListener() {
+        etTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new TimePickerDialog(
@@ -115,5 +279,27 @@ public class AddDiaryItemFragment extends Fragment {
         });
 
 
+    }
+
+    private void updateCarbUnits() {
+        float newCarbUnits = sbCarbFloatPart.getProgress() * 0.1f + sbCarbIntPart.getProgress();
+        item.setCarbUnits(newCarbUnits);
+        tvCarbUnits.setText(newCarbUnits + "");
+    }
+
+    private void updateSugar() {
+        float newSugar = sbSugarFloatPart.getProgress() * 0.1f + sbSugarIntPart.getProgress();
+        item.setSugarLevel(newSugar);
+        tvSugar.setText(newSugar + "");
+    }
+
+    private void updateInsulin() {
+        float newInsulin = sbInsulinFloatPart.getProgress() * 0.1f + sbInsulinIntPart.getProgress();
+        item.setInsulinRapidCount(newInsulin);
+        tvInsulin.setText(newInsulin + "");
+    }
+
+    private void finishFragment() {
+        getParentFragment().getChildFragmentManager().beginTransaction().remove(AddDiaryItemFragment.this).commit();
     }
 }

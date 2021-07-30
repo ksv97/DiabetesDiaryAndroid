@@ -102,7 +102,7 @@
                 android:text="@string/carb"/>
 
             <TextView
-                android:id="@+id/tvCarb"
+                android:id="@+id/tvCarbUnits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -192,6 +192,7 @@
         </LinearLayout>
     </LinearLayout>
     <EditText
+        android:id="@+id/etNote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"

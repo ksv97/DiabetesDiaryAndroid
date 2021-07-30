@@ -15,6 +15,11 @@ public class DiaryItem implements Serializable {
     private String note;
 
 
+    public DiaryItem() {
+        date = GregorianCalendar.getInstance();
+        note = "";
+    }
+
     private DiaryItem(int id, float insulinRapidCount, float carbUnits, float sugarLevel, String note) {
         this.id = id;
         this.insulinRapidCount = insulinRapidCount;
