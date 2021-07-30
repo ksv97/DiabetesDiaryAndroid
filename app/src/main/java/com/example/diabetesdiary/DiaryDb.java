@@ -84,6 +84,10 @@ public class DiaryDb {
         database.update(DIARY_ITEMS_TABLE_NAME, values,COLUMN_ID + " = ?", new String[] {item.getId()+""});
     }
 
+    public void delete(long id) {
+        database.delete(DIARY_ITEMS_TABLE_NAME, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+    }
+
 
     public ArrayList<DiaryItem> selectAll() {
         Cursor cursor = database.query(DIARY_ITEMS_TABLE_NAME,null,null,null,null,null,COLUMN_DATE + " DESC");

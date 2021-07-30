@@ -1,9 +1,11 @@
 package com.example.diabetesdiary;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.ListFragment;
@@ -15,9 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -80,4 +87,92 @@ public class DiaryListFragment extends Fragment {
         adapter.setItems(db.selectAll());
         adapter.notifyDataSetChanged();
     }
+
+    class DiaryItemArrayAdapter extends ArrayAdapter<DiaryItem> {
+
+        public ArrayList<DiaryItem> getItems() {
+            return items;
+        }
+
+        public void setItems(ArrayList<DiaryItem> items) {
+            this.items = items;
+        }
+
+        ArrayList<DiaryItem> items;
+
+        public DiaryItemArrayAdapter(@NonNull Context context, ArrayList<DiaryItem> items) {
+            super(context, R.layout.diary_list_item, items);
+            this.items = items;
+        }
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Nullable
+        @Override
+        public DiaryItem getItem(int position) {
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            DiaryItem item = getItem(position);
+            if(item != null) {
+                return item.getId();
+            }
+
+            return 0;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+            DiaryItem item = getItem(position);
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.diary_list_item,null);
+            }
+
+            TextView tvDate = convertView.findViewById(R.id.tvDate);
+            TextView tvTime = convertView.findViewById(R.id.tvTime);
+            TextView tvSugar = convertView.findViewById(R.id.tvSugar);
+            TextView tvCarbUnits = convertView.findViewById(R.id.tvCarbUnits);
+            TextView tvInsulin = convertView.findViewById(R.id.tvInsulin);
+            TextView tvNote = convertView.findViewById(R.id.tvNote);
+            ImageButton btnDeleteItem = convertView.findViewById(R.id.btnDeleteItem);
+            btnDeleteItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DiaryItem deletedItem = DiaryItemArrayAdapter.this.getItem(position);
+                    DiaryDb db = new DiaryDb(getContext());
+                    db.delete(item.getId());
+                    Snackbar.make(parent, "Запись удалена", Snackbar.LENGTH_LONG)
+                            .setAction("ОТМЕНА", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    db.insert(deletedItem);
+                                    updateList();
+                                }
+                            }).show();
+                    updateList();
+
+                }
+            });
+
+            DateTimeHelper.updateTimeViewLabel(tvTime,item.getDate());
+            DateTimeHelper.updateDateViewLabel(tvDate,item.getDate());
+            tvSugar.setText(item.getSugarLevel() + "");
+            tvCarbUnits.setText(item.getCarbUnits() + "");
+            tvInsulin.setText(item.getInsulinRapidCount() + "");
+            tvNote.setText(item.getNote());
+
+            return convertView;
+        }
+
+    }
+
+
 }
