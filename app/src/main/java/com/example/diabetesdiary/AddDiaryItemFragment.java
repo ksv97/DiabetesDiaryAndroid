@@ -78,7 +78,8 @@ public class AddDiaryItemFragment extends Fragment {
         sbCarbFloatPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateCarbUnits();
+                if (fromUser)
+                    updateCarbUnits();
 
             }
 
@@ -95,7 +96,8 @@ public class AddDiaryItemFragment extends Fragment {
         sbCarbIntPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateCarbUnits();
+                if (fromUser)
+                    updateCarbUnits();
             }
 
             @Override
@@ -111,7 +113,8 @@ public class AddDiaryItemFragment extends Fragment {
         sbSugarIntPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateSugar();
+                if (fromUser)
+                    updateSugar();
             }
 
             @Override
@@ -127,7 +130,8 @@ public class AddDiaryItemFragment extends Fragment {
         sbSugarFloatPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateSugar();
+                if (fromUser)
+                    updateSugar();
             }
 
             @Override
@@ -143,7 +147,8 @@ public class AddDiaryItemFragment extends Fragment {
         sbInsulinIntPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateInsulin();
+                if (fromUser)
+                    updateInsulin();
             }
 
             @Override
@@ -159,7 +164,8 @@ public class AddDiaryItemFragment extends Fragment {
         sbInsulinFloatPart.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateInsulin();
+                if (fromUser)
+                    updateInsulin();
             }
 
             @Override
@@ -197,9 +203,6 @@ public class AddDiaryItemFragment extends Fragment {
         etTime.setClickable(true);
         etTime.setInputType(InputType.TYPE_NULL);
 
-        DateTimeHelper.updateDateViewLabel(etDate,calendar);
-        DateTimeHelper.updateTimeViewLabel(etTime,calendar);
-
         setupDatePickerDialog();
         setupTimePickerDialog();
 
@@ -213,6 +216,9 @@ public class AddDiaryItemFragment extends Fragment {
                 if (action == ACTION_TYPE.ACTION_ADD) {
                     addItemAndClose();
                 }
+                else if (action == ACTION_TYPE.ACTION_EDIT) {
+                    updateItemAndClose();
+                }
             }
         });
 
@@ -224,12 +230,21 @@ public class AddDiaryItemFragment extends Fragment {
         });
 
 
+        setupValues();
+
         return v;
     }
 
     private void addItemAndClose() {
         DiaryDb db = new DiaryDb(getContext());
         db.insert(item);
+        ((DiaryListFragment)getParentFragment()).updateList();
+        finishFragment();
+    }
+
+    private void updateItemAndClose() {
+        DiaryDb db = new DiaryDb(getContext());
+        db.update(item);
         ((DiaryListFragment)getParentFragment()).updateList();
         finishFragment();
     }
@@ -300,6 +315,21 @@ public class AddDiaryItemFragment extends Fragment {
         float newInsulin = sbInsulinFloatPart.getProgress() * 0.1f + sbInsulinIntPart.getProgress();
         item.setInsulinRapidCount(newInsulin);
         tvInsulin.setText(newInsulin + "");
+    }
+
+    private void setupValues() {
+        DateTimeHelper.updateDateViewLabel(etDate,calendar);
+        DateTimeHelper.updateTimeViewLabel(etTime,calendar);
+        sbInsulinIntPart.setProgress((int)item.getInsulinRapidCount());
+        sbInsulinFloatPart.setProgress((int)(item.getInsulinRapidCount() * 10 % 10));
+        sbSugarIntPart.setProgress((int)item.getSugarLevel());
+        sbSugarFloatPart.setProgress((int)(item.getSugarLevel() * 10 % 10));
+        sbCarbIntPart.setProgress((int)item.getCarbUnits());
+        sbCarbFloatPart.setProgress((int)(item.getCarbUnits() * 10 % 10));
+        updateCarbUnits();
+        updateInsulin();
+        updateSugar();
+        etNote.setText(item.getNote());
     }
 
     private void finishFragment() {

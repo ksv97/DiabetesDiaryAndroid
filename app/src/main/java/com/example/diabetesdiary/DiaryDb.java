@@ -74,6 +74,16 @@ public class DiaryDb {
         return database.insert(DIARY_ITEMS_TABLE_NAME,null,values);
     }
 
+    public void update(DiaryItem item) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_DATE, item.getDate().getTimeInMillis());
+        values.put(COLUMN_SUGAR_LEVEL, item.getSugarLevel());
+        values.put(COLUMN_CARB_UNITS, item.getCarbUnits());
+        values.put(COLUMN_INSULIN_RAPID, item.getInsulinRapidCount());
+        values.put(COLUMN_NOTE, item.getNote());
+        database.update(DIARY_ITEMS_TABLE_NAME, values,COLUMN_ID + " = ?", new String[] {item.getId()+""});
+    }
+
 
     public ArrayList<DiaryItem> selectAll() {
         Cursor cursor = database.query(DIARY_ITEMS_TABLE_NAME,null,null,null,null,null,COLUMN_DATE + " DESC");

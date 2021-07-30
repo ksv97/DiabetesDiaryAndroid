@@ -14,6 +14,7 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class DiaryListFragment extends Fragment {
 
     DiaryDb db;
+    ListView listView;
     Handler handler;
     FloatingActionButton fabAdd;
     DiaryItemArrayAdapter adapter;
@@ -42,6 +44,8 @@ public class DiaryListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_diary_list, container, false);
+
+        listView = (ListView)v.findViewById(R.id.items_list);
         fabAdd = (FloatingActionButton)v.findViewById(R.id.btnAddItem);
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,9 +57,20 @@ public class DiaryListFragment extends Fragment {
             }
         });
 
+
         db = new DiaryDb(getContext());
         adapter = new DiaryItemArrayAdapter(getContext(), db.selectAll() );
-        ((ListView)v.findViewById(R.id.items_list)).setAdapter(adapter);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DiaryItem item = adapter.getItem(position);
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.details_container, new AddDiaryItemFragment(AddDiaryItemFragment.ACTION_TYPE.ACTION_EDIT, item))
+                        .commit();
+            }
+        });
 
 
         return v;
