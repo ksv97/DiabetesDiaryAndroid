@@ -76,7 +76,7 @@ public class DiaryDb {
 
 
     public ArrayList<DiaryItem> selectAll() {
-        Cursor cursor = database.query(DIARY_ITEMS_TABLE_NAME,null,null,null,null,null,null);
+        Cursor cursor = database.query(DIARY_ITEMS_TABLE_NAME,null,null,null,null,null,COLUMN_DATE + " DESC");
         ArrayList<DiaryItem> items = new ArrayList<>();
 
         cursor.moveToFirst();
