@@ -2,6 +2,8 @@ package com.example.diabetesdiary;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class DiaryItem implements Serializable {
 
@@ -9,17 +11,30 @@ public class DiaryItem implements Serializable {
     private Calendar date;
     private float insulinRapidCount;
     private float carbUnits;
-    private float glucoseLevel;
+    private float sugarLevel;
     private String note;
 
 
-    public DiaryItem(int id, Calendar date, float insulinRapidCount, float carbUnits, float glucoseLevel, String note) {
+    private DiaryItem(int id, float insulinRapidCount, float carbUnits, float sugarLevel, String note) {
         this.id = id;
-        this.date = date;
         this.insulinRapidCount = insulinRapidCount;
         this.carbUnits = carbUnits;
-        this.glucoseLevel = glucoseLevel;
+        this.sugarLevel = sugarLevel;
         this.note = note;
+    }
+
+    public DiaryItem(int id, float insulinRapidCount, float carbUnits, float sugarLevel, String note,  Calendar date) {
+        this(id,insulinRapidCount,carbUnits,sugarLevel,note);
+        this.date = date;
+    }
+
+    public DiaryItem(int id, float insulinRapidCount, float carbUnits, float sugarLevel, String note,  long dateInMillis) {
+        this(id,insulinRapidCount,carbUnits,sugarLevel,note);
+
+        Date date = new Date(dateInMillis);
+        Calendar c = GregorianCalendar.getInstance();
+        c.setTime(date);
+        this.date = c;
     }
 
     public int getId() {
@@ -58,11 +73,11 @@ public class DiaryItem implements Serializable {
         this.carbUnits = carbUnits;
     }
 
-    public float getGlucoseLevel() {
-        return glucoseLevel;
+    public float getSugarLevel() {
+        return sugarLevel;
     }
 
-    public void setGlucoseLevel(float glucoseLevel) {
-        this.glucoseLevel = glucoseLevel;
+    public void setSugarLevel(float sugarLevel) {
+        this.sugarLevel = sugarLevel;
     }
 }
