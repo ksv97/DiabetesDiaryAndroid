@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,7 @@ public class DiaryItemArrayAdapter extends ArrayAdapter<DiaryItem> {
     ArrayList<DiaryItem> items;
 
     public DiaryItemArrayAdapter(@NonNull Context context, ArrayList<DiaryItem> items) {
-        super(context, R.layout.fragment_diary_list, items);
+        super(context, R.layout.diary_list_item, items);
         this.items = items;
     }
 
@@ -58,6 +59,20 @@ public class DiaryItemArrayAdapter extends ArrayAdapter<DiaryItem> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_diary_list,null);
         }
+
+        TextView tvDate = convertView.findViewById(R.id.tvDate);
+        TextView tvTime = convertView.findViewById(R.id.tvTime);
+        TextView tvSugar = convertView.findViewById(R.id.tvSugar);
+        TextView tvCarbUnits = convertView.findViewById(R.id.tvCarbUnits);
+        TextView tvInsulin = convertView.findViewById(R.id.tvInsulin);
+        TextView tvNote = convertView.findViewById(R.id.tvNote);
+
+        DateTimeHelper.updateTimeViewLabel(tvTime,item.getDate());
+        DateTimeHelper.updateDateViewLabel(tvDate,item.getDate());
+        tvSugar.setText(item.getSugarLevel() + "");
+        tvCarbUnits.setText(item.getCarbUnits() + "");
+        tvInsulin.setText(item.getInsulinRapidCount() + "");
+        tvNote.setText(item.getNote());
 
         return convertView;
     }
