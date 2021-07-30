@@ -44,7 +44,7 @@ public class AddDiaryItemFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_add_diary_item, container, false);
 
-        calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT+3"), Locale.getDefault());
+        calendar = GregorianCalendar.getInstance();
         date =  (EditText)v.findViewById(R.id.etDate);
         time = (EditText)v.findViewById(R.id.etTime);
 
@@ -60,6 +60,7 @@ public class AddDiaryItemFragment extends Fragment {
         updateTimeEt();
         setupDatePickerDialog();
         setupTimePickerDialog();
+
 
         return v;
     }

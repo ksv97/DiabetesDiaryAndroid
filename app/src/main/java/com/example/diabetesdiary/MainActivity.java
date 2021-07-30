@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Locale.setDefault(new Locale("ru"));
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+3"));
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         DiaryListFragment listFragment = new DiaryListFragment();
