@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 
 public class PreferencesFragment extends Fragment {
@@ -56,11 +59,17 @@ public class PreferencesFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 
+
+    }
+
+    public void savePreferences(View view) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putFloat(GOAL_SUGAR_PREF_NAME, Float.parseFloat(etGoalSugar.getText().toString()));
         editor.putFloat(LOW_SUGAR_PREF_NAME, Float.parseFloat(etLowSugar.getText().toString()));
         editor.putFloat(HIGH_SUGAR_PREF_NAME, Float.parseFloat(etHighSugar.getText().toString()));
 
         editor.commit();
+
+        Snackbar.make(getView(),"Настройки сохранены",Snackbar.LENGTH_LONG).show();
     }
 }
