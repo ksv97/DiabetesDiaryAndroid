@@ -89,6 +89,7 @@ public class DiaryDb {
             String note = cursor.getString(NUM_COLUMN_NOTE);
             DiaryItem item = new DiaryItem(id,insulinRapid, carbUnits, sugarLevel,note,dateInMillis);
             items.add(item);
+            cursor.moveToNext();
         }
         cursor.close();
         return items;

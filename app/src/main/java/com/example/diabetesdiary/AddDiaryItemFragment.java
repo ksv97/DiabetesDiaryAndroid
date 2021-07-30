@@ -228,7 +228,10 @@ public class AddDiaryItemFragment extends Fragment {
     }
 
     private void addItemAndClose() {
-
+        DiaryDb db = new DiaryDb(getContext());
+        db.insert(item);
+        ((DiaryListFragment)getParentFragment()).updateList();
+        finishFragment();
     }
 
     private void setupDatePickerDialog() {

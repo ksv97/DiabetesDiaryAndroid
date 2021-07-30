@@ -60,4 +60,9 @@ public class DiaryListFragment extends Fragment {
 
         return v;
     }
+
+    public void updateList() {
+        adapter.setItems(db.selectAll());
+        adapter.notifyDataSetChanged();
+    }
 }

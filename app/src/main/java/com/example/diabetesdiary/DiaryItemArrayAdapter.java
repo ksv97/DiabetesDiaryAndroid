@@ -57,7 +57,7 @@ public class DiaryItemArrayAdapter extends ArrayAdapter<DiaryItem> {
         DiaryItem item = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_diary_list,null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.diary_list_item,null);
         }
 
         TextView tvDate = convertView.findViewById(R.id.tvDate);
