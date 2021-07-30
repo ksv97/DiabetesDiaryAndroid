@@ -56,8 +56,9 @@ public class AddDiaryItemFragment extends Fragment {
         time.setClickable(true);
         time.setInputType(InputType.TYPE_NULL);
 
-        updateDateEt();
-        updateTimeEt();
+        DateTimeHelper.updateDateViewLabel(date,calendar);
+        DateTimeHelper.updateTimeViewLabel(time,calendar);
+
         setupDatePickerDialog();
         setupTimePickerDialog();
 
@@ -73,7 +74,7 @@ public class AddDiaryItemFragment extends Fragment {
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateDateEt();
+                DateTimeHelper.updateDateViewLabel(date,calendar);
             }
         };
 
@@ -97,7 +98,7 @@ public class AddDiaryItemFragment extends Fragment {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 calendar.set(Calendar.MINUTE,minute);
-                updateTimeEt();
+                DateTimeHelper.updateTimeViewLabel(time,calendar);
             }
         };
 
@@ -114,18 +115,5 @@ public class AddDiaryItemFragment extends Fragment {
         });
 
 
-    }
-
-    private void updateDateEt() {
-        String dateFormatString = "EEE, d MMM yyyy";
-        SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatString, Locale.getDefault());
-        date.setText(dateFormat.format(calendar.getTime()));
-    }
-
-    private void updateTimeEt() {
-        String timeFormatString = "HH:mm";
-        SimpleDateFormat timeFormat = new SimpleDateFormat(timeFormatString, Locale.getDefault());
-        timeFormat.setTimeZone(calendar.getTimeZone());
-        time.setText(timeFormat.format(calendar.getTime()));
     }
 }
