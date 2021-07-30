@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class DiaryDb {
 
@@ -110,6 +111,33 @@ public class DiaryDb {
 
     }
 
+    public ArrayList<DiaryItemChartModel> selectChartModelItems(Calendar startDate, Calendar endDate) {
+        long startDateMillis = startDate.getTimeInMillis();
+        long endDateMillis = endDate.getTimeInMillis();
+
+        ArrayList<DiaryItemChartModel> items = new ArrayList<>();
+
+        Cursor cursor = database.query(
+                DIARY_ITEMS_TABLE_NAME,
+                new String[] {COLUMN_SUGAR_LEVEL, COLUMN_DATE},
+                COLUMN_DATE + " > ? and " + COLUMN_DATE + " < ?",
+                new String[] {String.valueOf(startDateMillis), String.valueOf(endDateMillis)},
+                null,
+                null,
+                COLUMN_DATE
+                );
+
+        cursor.moveToFirst();
+
+        while(!cursor.isAfterLast()) {
+            float sugarLevel = cursor.getFloat(cursor.getColumnIndexOrThrow(COLUMN_SUGAR_LEVEL));
+            long dateMillis = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_DATE));
+            items.add(new DiaryItemChartModel(sugarLevel,dateMillis));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return items;
+    }
 
 
 }
