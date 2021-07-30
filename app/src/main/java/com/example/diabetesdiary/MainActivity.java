@@ -2,20 +2,20 @@ package com.example.diabetesdiary;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 
 /* TODO
-    1. Сделать выпадающий Time-picker и Date-picker в добавлении
-    2. Изменить EditText на TextView
-    3. Попробовать сделать фрагмент и добавить его в ListView - для Edit/Add в листе.
+
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -39,11 +39,10 @@ public class DiaryListFragment extends Fragment {
                 FragmentTransaction transaction =  getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.details_container, new AddDiaryItemFragment());
                 transaction.commit();
-//                Intent i = new Intent(getActivity(),AddDiaryItemActivity.class);
-//                startActivity(i);
 
             }
         });
+
 
         return v;
     }
