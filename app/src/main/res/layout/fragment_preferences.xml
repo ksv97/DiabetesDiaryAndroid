@@ -68,7 +68,6 @@
 
     </GridLayout>
     <Button
-        android:onClick="savePreferences"
         android:text="Сохранить"
         android:id="@+id/btnSavePreferences"
         android:layout_width="wrap_content"

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -47,6 +48,13 @@ public class PreferencesFragment extends Fragment {
         etGoalSugar = v.findViewById(R.id.etGoalSugar);
         etLowSugar = v.findViewById(R.id.etLowSugar);
         etHighSugar = v.findViewById(R.id.etHighSugar);
+
+        ((Button)v.findViewById(R.id.btnSavePreferences)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                savePreferences(v);
+            }
+        });
 
         etGoalSugar.setText(preferences.getFloat(GOAL_SUGAR_PREF_NAME, 6.0f) + "");
         etLowSugar.setText(preferences.getFloat(LOW_SUGAR_PREF_NAME, 4.0f)+"");
