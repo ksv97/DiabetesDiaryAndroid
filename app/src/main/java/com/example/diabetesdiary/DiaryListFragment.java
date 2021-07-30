@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DiaryListFragment extends Fragment {
@@ -37,6 +38,7 @@ public class DiaryListFragment extends Fragment {
     DiaryItemArrayAdapter adapter;
 
     public DiaryListFragment() {
+
         // Required empty public constructor
     }
 
@@ -52,6 +54,8 @@ public class DiaryListFragment extends Fragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_diary_list, container, false);
 
+        db = new DiaryDb(getContext());
+
         listView = (ListView)v.findViewById(R.id.items_list);
         fabAdd = (FloatingActionButton)v.findViewById(R.id.btnAddItem);
         fabAdd.setOnClickListener(new View.OnClickListener() {
@@ -64,10 +68,25 @@ public class DiaryListFragment extends Fragment {
             }
         });
 
+        handler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                if (msg.obj instanceof ArrayList) {
+                    ArrayList<DiaryItem> items = (ArrayList<DiaryItem>) msg.obj;
+                    if (adapter == null) {
+                        adapter = new DiaryItemArrayAdapter(getContext(), items );
+                        listView.setAdapter(adapter);
+                    }
+                    else {
+                        adapter.setItems(items);
+                        adapter.notifyDataSetChanged();
+                    }
 
-        db = new DiaryDb(getContext());
-        adapter = new DiaryItemArrayAdapter(getContext(), db.selectAll() );
-        listView.setAdapter(adapter);
+                }
+                return false;
+            }
+        });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,13 +98,22 @@ public class DiaryListFragment extends Fragment {
             }
         });
 
+        updateListAsync();
 
         return v;
     }
 
-    public void updateList() {
-        adapter.setItems(db.selectAll());
-        adapter.notifyDataSetChanged();
+    public void updateListAsync() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<DiaryItem> items = db.selectAll();
+                Message m = new Message();
+                m.obj = items;
+                handler.sendMessage(m);
+            }
+        }).start();
     }
 
     class DiaryItemArrayAdapter extends ArrayAdapter<DiaryItem> {
@@ -154,10 +182,10 @@ public class DiaryListFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     db.insert(deletedItem);
-                                    updateList();
+                                    updateListAsync();
                                 }
                             }).show();
-                    updateList();
+                    updateListAsync();
 
                 }
             });

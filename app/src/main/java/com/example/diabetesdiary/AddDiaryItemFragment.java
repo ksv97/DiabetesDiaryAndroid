@@ -238,14 +238,14 @@ public class AddDiaryItemFragment extends Fragment {
     private void addItemAndClose() {
         DiaryDb db = new DiaryDb(getContext());
         db.insert(item);
-        ((DiaryListFragment)getParentFragment()).updateList();
+        ((DiaryListFragment)getParentFragment()).updateListAsync();
         finishFragment();
     }
 
     private void updateItemAndClose() {
         DiaryDb db = new DiaryDb(getContext());
         db.update(item);
-        ((DiaryListFragment)getParentFragment()).updateList();
+        ((DiaryListFragment)getParentFragment()).updateListAsync();
         finishFragment();
     }
 

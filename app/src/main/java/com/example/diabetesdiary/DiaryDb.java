@@ -36,9 +36,6 @@ public class DiaryDb {
             db.execSQL("DROP TABLE IF EXISTS " + DIARY_ITEMS_TABLE_NAME);
             onCreate(db);
         }
-
-
-
     }
 
     public static final String DB_NAME = "diabetes_diary.db";
