@@ -116,7 +116,7 @@ public class StatisticsFragment extends Fragment {
                 DateTimeHelper.updateDateViewLabel(etEndDate,endDate);
             }
         };
-        etStartDate.setOnClickListener(new View.OnClickListener() {
+        etEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(
