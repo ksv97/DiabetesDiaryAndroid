@@ -86,6 +86,14 @@ public class DiaryDb {
         database.delete(DIARY_ITEMS_TABLE_NAME, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
     }
 
+    public void deleteOldData() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH,-3);
+        long dateInMillis = calendar.getTimeInMillis();
+
+        database.delete(DIARY_ITEMS_TABLE_NAME, COLUMN_DATE + " < ?", new String[]{String.valueOf(dateInMillis)});
+    }
+
 
     public ArrayList<DiaryItem> selectAll() {
         Cursor cursor = database.query(DIARY_ITEMS_TABLE_NAME,null,null,null,null,null,COLUMN_DATE + " DESC");

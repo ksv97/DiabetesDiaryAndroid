@@ -19,7 +19,6 @@ import java.util.TimeZone;
 
 
 /* TODO
-    * Доделать многопоточность
     *
     *. Сделать так, чтобы новый элемент не добавлялся без заполнения хотя бы какого-либо значения
     *. Сделать отображение значений сверху на SeekBar-ах
@@ -71,6 +70,16 @@ public class MainActivity extends FragmentActivity {
                 .beginTransaction()
                 .replace(R.id.list_container, new DiaryListFragment())
                 .commit();
+
+        // удаляем данные 3-хмесячной давности с целью освобождения памяти в отдельном потоке
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DiaryDb db = new DiaryDb(MainActivity.this);
+                db.deleteOldData();
+            }
+        }).start();
     }
+
 
 }
