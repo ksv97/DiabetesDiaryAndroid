@@ -183,17 +183,31 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void showChart() {
-        DiaryDb db = new DiaryDb(getContext());
-        itemsToShow = db.selectChartModelItems(startDate,endDate);
-        ArrayList<Entry> entries = new ArrayList<>();
-        for (DiaryItemChartModel item: itemsToShow) {
-            entries.add(new Entry(item.getDate().getTimeInMillis() / 1000, item.getSugarLevel()));
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DiaryDb db = new DiaryDb(getContext());
+                itemsToShow = db.selectChartModelItems(startDate,endDate);
 
-        LineDataSet dataSet = new LineDataSet(entries, "Глюкоза крови");
-        LineData lineData = new LineData(dataSet);
-        chart.setData(lineData);
-        chart.invalidate();
+                ArrayList<Entry> entries = new ArrayList<>();
+                for (DiaryItemChartModel item: itemsToShow) {
+                    entries.add(new Entry(item.getDate().getTimeInMillis() / 1000, item.getSugarLevel()));
+                }
+                LineDataSet dataSet = new LineDataSet(entries, "Глюкоза крови");
+                LineData lineData = new LineData(dataSet);
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chart.setData(lineData);
+                        chart.invalidate();
+                    }
+                });
+
+            }
+        }).start();
+
+
 
     }
 }
