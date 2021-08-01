@@ -189,6 +189,7 @@ public class DiaryListFragment extends Fragment {
 
                 }
             });
+            btnDeleteItem.setFocusable(false);
 
             DateTimeHelper.updateTimeViewLabel(tvTime,item.getDate());
             DateTimeHelper.updateDateViewLabel(tvDate,item.getDate());
