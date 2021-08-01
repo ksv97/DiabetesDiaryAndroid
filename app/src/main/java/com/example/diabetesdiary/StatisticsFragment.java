@@ -3,6 +3,7 @@ package com.example.diabetesdiary;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -137,7 +139,7 @@ public class StatisticsFragment extends Fragment {
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
-        xAxis.setSpaceMax(15);
+        xAxis.setSpaceMax(25);
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
@@ -159,6 +161,20 @@ public class StatisticsFragment extends Fragment {
         axisLeft.setSpaceMin(0f);
         axisLeft.setSpaceTop(20f);
 
+        SharedPreferences preferences = requireContext().getSharedPreferences(PreferencesFragment.PROFILE_PREFS, Context.MODE_PRIVATE);
+        float lowSugar = preferences.getFloat(PreferencesFragment.LOW_SUGAR_PREF_NAME, PreferencesFragment.LOW_SUGAR_DEFAULT);
+        float highSugar = preferences.getFloat(PreferencesFragment.HIGH_SUGAR_PREF_NAME, PreferencesFragment.HIGH_SUGAR_DEFAULT);
+
+        LimitLine highSugarLimitLine = new LimitLine(highSugar, "Высокий сахар");
+        highSugarLimitLine.setLineColor(Color.RED);
+        highSugarLimitLine.setLineWidth(2.5f);
+
+        LimitLine lowSugarLimitLine = new LimitLine(lowSugar, "Низкий сахар");
+        lowSugarLimitLine.setLineColor(Color.RED);
+        lowSugarLimitLine.setLineWidth(2.5f);
+
+        axisLeft.addLimitLine(highSugarLimitLine);
+        axisLeft.addLimitLine(lowSugarLimitLine);
 
 
         showChart();

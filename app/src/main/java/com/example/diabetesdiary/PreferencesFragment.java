@@ -24,6 +24,10 @@ public class PreferencesFragment extends Fragment {
     static String LOW_SUGAR_PREF_NAME = "lowSugar";
     static String HIGH_SUGAR_PREF_NAME = "highSugar";
 
+    static float LOW_SUGAR_DEFAULT = 4.0f;
+    static float HIGH_SUGAR_DEFAULT = 9.0f;
+    static float GOAL_SUGAR_DEFAULT = 6.0f;
+
     EditText etGoalSugar, etLowSugar, etHighSugar;
 
     SharedPreferences preferences;
@@ -56,9 +60,9 @@ public class PreferencesFragment extends Fragment {
             }
         });
 
-        etGoalSugar.setText(preferences.getFloat(GOAL_SUGAR_PREF_NAME, 6.0f) + "");
-        etLowSugar.setText(preferences.getFloat(LOW_SUGAR_PREF_NAME, 4.0f)+"");
-        etHighSugar.setText(preferences.getFloat(HIGH_SUGAR_PREF_NAME, 9.0f)+"");
+        etGoalSugar.setText(preferences.getFloat(GOAL_SUGAR_PREF_NAME, GOAL_SUGAR_DEFAULT) + "");
+        etLowSugar.setText(preferences.getFloat(LOW_SUGAR_PREF_NAME, LOW_SUGAR_DEFAULT)+"");
+        etHighSugar.setText(preferences.getFloat(HIGH_SUGAR_PREF_NAME, HIGH_SUGAR_DEFAULT)+"");
 
         return v;
     }
