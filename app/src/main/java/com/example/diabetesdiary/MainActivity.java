@@ -18,12 +18,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 
-/* TODO
-    *
-    *. Сделать так, чтобы новый элемент не добавлялся без заполнения хотя бы какого-либо значения
-    *. Сделать отображение значений сверху на SeekBar-ах
-    * Вывести статистику за период (количественную)
- */
 public class MainActivity extends FragmentActivity {
 
 

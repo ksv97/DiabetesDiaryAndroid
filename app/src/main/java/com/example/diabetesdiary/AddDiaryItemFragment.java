@@ -19,6 +19,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -214,7 +216,12 @@ public class AddDiaryItemFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (action == ACTION_TYPE.ACTION_ADD) {
-                    addItemAndClose();
+                    if (item.getCarbUnits() > 0 || item.getSugarLevel() > 0  || item.getInsulinRapidCount() > 0 || !item.getNote().equals("")) {
+                        addItemAndClose();
+                    }
+                    else {
+                        Snackbar.make(getView(),"Заполните хотя бы одно поле перед добавлением записи!", Snackbar.LENGTH_SHORT).show();
+                    }
                 }
                 else if (action == ACTION_TYPE.ACTION_EDIT) {
                     updateItemAndClose();
@@ -238,6 +245,7 @@ public class AddDiaryItemFragment extends Fragment {
     private void addItemAndClose() {
         DiaryDb db = new DiaryDb(getContext());
         db.insert(item);
+        Snackbar.make(getView(),"Запись успешно добавлена", Snackbar.LENGTH_SHORT).show();
         ((DiaryListFragment)getParentFragment()).updateListAsync();
         finishFragment();
     }
@@ -245,6 +253,7 @@ public class AddDiaryItemFragment extends Fragment {
     private void updateItemAndClose() {
         DiaryDb db = new DiaryDb(getContext());
         db.update(item);
+        Snackbar.make(getView(),"Запись успешно обновлена", Snackbar.LENGTH_SHORT).show();
         ((DiaryListFragment)getParentFragment()).updateListAsync();
         finishFragment();
     }
