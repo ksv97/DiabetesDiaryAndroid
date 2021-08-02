@@ -24,9 +24,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-
+// Фрагмент, который отвечает за изменение\добавление записи в дневнике самоконтроля
 public class AddDiaryItemFragment extends Fragment {
 
+    // тип действия - добавление или изменение записи
     public enum ACTION_TYPE {
         ACTION_ADD, ACTION_EDIT
     }
@@ -48,7 +49,6 @@ public class AddDiaryItemFragment extends Fragment {
             this.item = item;
         }
         calendar = this.item.getDate();
-        // Required empty public constructor
     }
 
     @Override
@@ -197,6 +197,9 @@ public class AddDiaryItemFragment extends Fragment {
             }
         });
 
+
+        // Делаем невозможным редактирование EditText-ов для даты и времени
+        // чтобы пользователь пользовался исключительно DatePicker-ом и TimePicker-ом
         etDate.setFocusable(false);
         etDate.setClickable(true);
         etDate.setInputType(InputType.TYPE_NULL);
@@ -216,6 +219,7 @@ public class AddDiaryItemFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (action == ACTION_TYPE.ACTION_ADD) {
+                    // Для добавления записи необходимо, чтобы хотя бы одно поле было не пустым
                     if (item.getCarbUnits() > 0 || item.getSugarLevel() > 0  || item.getInsulinRapidCount() > 0 || !item.getNote().equals("")) {
                         addItemAndClose();
                     }
@@ -236,28 +240,37 @@ public class AddDiaryItemFragment extends Fragment {
             }
         });
 
-
+        // установка значений в элементы управления в соответствии с текущим Item-ом
         setupValues();
 
         return v;
     }
 
     private void addItemAndClose() {
+        // выполнение добавления в БД. Не вынесено в отдельный поток, т.к. не является трудоемкой операцией
         DiaryDb db = new DiaryDb(getContext());
         db.insert(item);
         Snackbar.make(getView(),"Запись успешно добавлена", Snackbar.LENGTH_SHORT).show();
+
+        // асинхронное обновление данных в ListView
         ((DiaryListFragment)getParentFragment()).updateListAsync();
         finishFragment();
     }
 
     private void updateItemAndClose() {
+        // выполнение обновления записи в БД. Не вынесено в отдельный поток, т.к. не является трудоемкой операцией
         DiaryDb db = new DiaryDb(getContext());
         db.update(item);
         Snackbar.make(getView(),"Запись успешно обновлена", Snackbar.LENGTH_SHORT).show();
+
+        // асинхронное обновление данных в ListView
         ((DiaryListFragment)getParentFragment()).updateListAsync();
         finishFragment();
     }
 
+    /**
+     * Настройка DatePicker-а и установка обработчика событий на клик по EditText-у для даты записи в дневнике
+     */
     private void setupDatePickerDialog() {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -282,6 +295,10 @@ public class AddDiaryItemFragment extends Fragment {
         });
     }
 
+
+    /**
+     * Настройка TimePicker-а и установка обработчика событий на клик по EditText-у для времени записи в дневнике
+     */
     private void setupTimePickerDialog() {
 
         TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -308,24 +325,38 @@ public class AddDiaryItemFragment extends Fragment {
 
     }
 
+
+    /**
+     * Обновление данных и представления для хлебных единиц
+     */
     private void updateCarbUnits() {
         float newCarbUnits = sbCarbFloatPart.getProgress() * 0.1f + sbCarbIntPart.getProgress();
         item.setCarbUnits(newCarbUnits);
         tvCarbUnits.setText(newCarbUnits + "");
     }
 
+    /**
+     * Обновление данных и представления для уровня глюкозы
+     */
     private void updateSugar() {
         float newSugar = sbSugarFloatPart.getProgress() * 0.1f + sbSugarIntPart.getProgress();
         item.setSugarLevel(newSugar);
         tvSugar.setText(newSugar + "");
     }
 
+
+    /**
+     * Обновление данных и представления для введенного короткого инсулина
+     */
     private void updateInsulin() {
         float newInsulin = sbInsulinFloatPart.getProgress() * 0.1f + sbInsulinIntPart.getProgress();
         item.setInsulinRapidCount(newInsulin);
         tvInsulin.setText(newInsulin + "");
     }
 
+    /**
+     * Установка значений в представление в соответствии с текущим DiaryItem-ом
+     */
     private void setupValues() {
         DateTimeHelper.updateDateViewLabel(etDate,calendar);
         DateTimeHelper.updateTimeViewLabel(etTime,calendar);
@@ -341,6 +372,9 @@ public class AddDiaryItemFragment extends Fragment {
         etNote.setText(item.getNote());
     }
 
+    /**
+     * Удаление фрагмента из контейнера
+     */
     private void finishFragment() {
         getParentFragment().getChildFragmentManager().beginTransaction().remove(AddDiaryItemFragment.this).commit();
     }

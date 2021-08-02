@@ -74,6 +74,10 @@ public class PreferencesFragment extends Fragment {
 
     }
 
+    /**
+     * Сохранение текущих настроек пользователя в SharedPreferences
+     * @param view
+     */
     public void savePreferences(View view) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putFloat(GOAL_SUGAR_PREF_NAME, Float.parseFloat(etGoalSugar.getText().toString()));

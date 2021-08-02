@@ -5,12 +5,29 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * Класс, который служит основной моделью данных для дневника самоконтроля инсулинотерапии
+ */
 public class DiaryItem implements Serializable {
 
     private int id;
     private Calendar date;
+
+    /**
+     * Количество инсулина короткого действия.
+     *
+     * Данное разбиение сделано с целью возможного расширения до добавления инсулина продленного действия
+     */
     private float insulinRapidCount;
+
+    /**
+     * Количество хлебных единиц (ХЕ), употребленных в пищу
+     */
     private float carbUnits;
+
+    /**
+     * Текущий уровень глюкозы крови
+     */
     private float sugarLevel;
     private String note;
 

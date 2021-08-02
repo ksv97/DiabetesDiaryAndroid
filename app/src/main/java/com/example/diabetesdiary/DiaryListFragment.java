@@ -73,11 +73,12 @@ public class DiaryListFragment extends Fragment {
             public boolean handleMessage(@NonNull Message msg) {
                 if (msg.obj instanceof ArrayList) {
                     ArrayList<DiaryItem> items = (ArrayList<DiaryItem>) msg.obj;
+                    // инициализация адаптера после первой загрузки данных
                     if (adapter == null) {
                         adapter = new DiaryItemArrayAdapter(getContext(), items );
                         listView.setAdapter(adapter);
                     }
-                    else {
+                    else { // обновление данных
                         adapter.setItems(items);
                         adapter.notifyDataSetChanged();
                     }
@@ -91,6 +92,7 @@ public class DiaryListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DiaryItem item = adapter.getItem(position);
+                // создание фрагмента и передача ему записи из списка для редактирования
                 getChildFragmentManager()
                         .beginTransaction()
                         .replace(R.id.details_container, new AddDiaryItemFragment(AddDiaryItemFragment.ACTION_TYPE.ACTION_EDIT, item))
@@ -103,6 +105,9 @@ public class DiaryListFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Асинхронное обновление списка существующих записей, загрузка из базы данных.
+     */
     public void updateListAsync() {
 
         new Thread(new Runnable() {
@@ -189,6 +194,7 @@ public class DiaryListFragment extends Fragment {
 
                 }
             });
+            // для того, чтобы работал клик по ListView.item
             btnDeleteItem.setFocusable(false);
 
             DateTimeHelper.updateTimeViewLabel(tvTime,item.getDate());

@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * Класс, представляющий модель данных для отображения на графике мониторинга статистики глюкозы
+ */
 public class DiaryItemChartModel {
 
     private float sugarLevel;

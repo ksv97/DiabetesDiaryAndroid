@@ -86,6 +86,9 @@ public class DiaryDb {
         database.delete(DIARY_ITEMS_TABLE_NAME, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
     }
 
+    /**
+     * Удаляет данные возрастом 3 месяца и старше от текущей даты
+     */
     public void deleteOldData() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH,-3);
@@ -116,6 +119,12 @@ public class DiaryDb {
 
     }
 
+    /**
+     * Выборка данных для отображения на графике.
+     * @param startDate дата начала промежутка
+     * @param endDate дата окончания промежутка
+     * @return
+     */
     public ArrayList<DiaryItemChartModel> selectChartModelItems(Calendar startDate, Calendar endDate) {
         long startDateMillis = startDate.getTimeInMillis();
         long endDateMillis = endDate.getTimeInMillis();

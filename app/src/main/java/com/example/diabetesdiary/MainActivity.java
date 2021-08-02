@@ -33,26 +33,7 @@ public class MainActivity extends FragmentActivity {
         NavigationBarView.OnItemSelectedListener listener = new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.diary:
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.list_container, new DiaryListFragment())
-                                .commit();
-                        break;
-                    case R.id.statistics:
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.list_container, new StatisticsFragment())
-                                .commit();
-                        break;
-                    case R.id.preferences:
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.list_container, new PreferencesFragment())
-                                .commit();
-                        break;
-                }
+                navigateToFragment(item);
 
                 return true;
             }
@@ -65,7 +46,37 @@ public class MainActivity extends FragmentActivity {
                 .replace(R.id.list_container, new DiaryListFragment())
                 .commit();
 
-        // удаляем данные 3-хмесячной давности с целью освобождения памяти в отдельном потоке
+        removeOldDataAsync();
+    }
+
+    // Переход на нужный фрагмент в зависимости от кнопки меню
+    private void navigateToFragment(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.diary:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.list_container, new DiaryListFragment())
+                        .commit();
+                break;
+            case R.id.statistics:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.list_container, new StatisticsFragment())
+                        .commit();
+                break;
+            case R.id.preferences:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.list_container, new PreferencesFragment())
+                        .commit();
+                break;
+        }
+    }
+
+    /**
+     * Вызов удаления старых данных из базы в отдельном потоке
+     */
+    private void removeOldDataAsync() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -74,6 +85,5 @@ public class MainActivity extends FragmentActivity {
             }
         }).start();
     }
-
 
 }

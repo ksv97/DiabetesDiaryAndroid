@@ -182,6 +182,9 @@ public class StatisticsFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Асинхронная загрузка и обновление данных на графике
+     */
     private void showChart() {
         new Thread(new Runnable() {
             @Override
@@ -189,6 +192,7 @@ public class StatisticsFragment extends Fragment {
                 DiaryDb db = new DiaryDb(getContext());
                 itemsToShow = db.selectChartModelItems(startDate,endDate);
 
+                // Преобразование данных в Entry. Необходимо для отображения данных на графике.
                 ArrayList<Entry> entries = new ArrayList<>();
                 for (DiaryItemChartModel item: itemsToShow) {
                     entries.add(new Entry(item.getDate().getTimeInMillis() / 1000, item.getSugarLevel()));
